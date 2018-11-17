@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace CleanArchitecture;
 
 /**
- * @author Thallys Rodrigues Costa
+ * @author Thallys Rodrigues Costa <thallys.rc@gmail.com>
  */
 class GithubUser
 {
@@ -22,23 +22,23 @@ class GithubUser
 		$this->gateway = $gateway;
 	}
 
-	public function getInfo()
+	public function getInfo($user)
 	{
-		$response = $this->gateway->getRepositories();
+		$response = $this->gateway->getRepositories($user);
 
-		$repositories = array_reduce($response, function ($carry, $item) {
+		$repositories = array_reduce($response, function ($carry, $repository) {
 			$carry[] = [
-				'id' => $item->id,
-				'name' => $item->name,
-				'description' => $item->description,
-				'is_fork' => $item->fork,
-				'html_url' => $item->html_url,
+				'id' => $repository->id,
+				'name' => $repository->name,
+				'description' => $repository->description,
+				'is_fork' => $repository->fork,
+				'html_url' => $repository->html_url,
 			];
 
 			return $carry;
 		}, []);
 
-		$response = $this->gateway->getProfile();
+		$response = $this->gateway->getProfile($user);
 
 		$profile = [
 			'name' => $response->name,

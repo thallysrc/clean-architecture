@@ -3,7 +3,7 @@
 namespace CleanArchitecture;
 
 /**
- * @author Thallys Rodrigues Costa
+ * @author Thallys Rodrigues Costa <thallys.rc@gmail.com>
  */
 class GithubUserGateway
 {
@@ -14,11 +14,7 @@ class GithubUserGateway
 		$this->endpoint = $endpoint;
 	}
 
-	public function stream()
-	{
-	}
-
-	public function getRepositories()
+	public function stream($url)
 	{
 		$opts = [
 			'http' => [
@@ -31,23 +27,17 @@ class GithubUserGateway
 		];
 
 		$context = stream_context_create($opts);
-		return json_decode(file_get_contents($this->endpoint.'/users/thallysrc/repos', false, $context));
+
+		return json_decode(file_get_contents($this->endpoint.$url, false, $context));
 	}
 
-	public function getProfile()
+	public function getRepositories($user)
 	{
-		$opts = [
-			'http' => [
-				'method' => 'GET',
-				'header' => [
-					'Content-Type: application/json',
-					'User-Agent: PHP'
-				],
-			],
-		];
+		return $this->stream('/users/'.$user.'/repos');
+	}
 
-		$context = stream_context_create($opts);
-		return json_decode(file_get_contents($this->endpoint.'/users/thallysrc', false, $context));
-
+	public function getProfile($user)
+	{
+		return $this->stream('/users/'.$user);
 	}
 }
