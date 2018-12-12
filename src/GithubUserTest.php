@@ -25,11 +25,13 @@ class GithubUserTest extends \PHPUnit\Framework\TestCase
 			'html_url' => 'https://onehundredpercentsatan.com',
 			'repositories' => [],
 		];
-		$mock->getRepositories()->willReturn([$repositories]);
-		$mock->getProfile()->willReturn($profile);
+
+		$user = 'juggernault';
+		$mock->getRepositories($user)->shouldBeCalled()->willReturn([$repositories]);
+		$mock->getProfile($user)->shouldBeCalled()->willReturn($profile);
 
 		$service = new GithubUser($mock->reveal());
-		$result = $service->getInfo();
+		$result = $service->getInfo($user);
 		$this->assertCount(4, $result);
 	}
 }
